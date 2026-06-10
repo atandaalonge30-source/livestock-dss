@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Add Vaccination{% endblock %}
+{% block page_title %}Vaccination Records{% endblock %}
+{% block page_subtitle %}Record a vaccination{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div><h2>Add Vaccination Record</h2></div>
+  <a href="{{ url_for('vaccination') }}" class="btn btn-outline"><i class="fas fa-arrow-left"></i> Back</a>
+</div>
+<div class="card" style="max-width:700px;">
+  <div class="card-header"><h3><i class="fas fa-syringe" style="color:var(--primary);margin-right:8px"></i>Vaccination Details</h3></div>
+  <div class="card-body">
+    <form method="POST">
+      <div class="form-grid">
+        <div class="form-group"><label>Tag Number *</label><input type="text" name="tag_number" placeholder="Animal tag number" required/></div>
+        <div class="form-group"><label>Animal Type *</label>
+          <select name="animal_type" required><option value="">-- Select --</option>
+          <option>Cattle</option><option>Goat</option><option>Sheep</option>
+          <option>Poultry</option><option>Pig</option><option>Rabbit</option></select>
+        </div>
+        <div class="form-group"><label>Vaccine Name *</label>
+          <select name="vaccine_name" required><option value="">-- Select --</option>
+          <option>Newcastle Disease Vaccine</option><option>Foot and Mouth Disease Vaccine</option>
+          <option>Anthrax Vaccine</option><option>Brucellosis Vaccine</option>
+          <option>PPR Vaccine</option><option>CBPP Vaccine</option>
+          <option>Gumboro Vaccine</option><option>Mareks Disease Vaccine</option><option>Other</option></select>
+        </div>
+        <div class="form-group"><label>Date Administered *</label><input type="date" name="date_administered" required/></div>
+        <div class="form-group"><label>Next Due Date</label><input type="date" name="next_due_date"/></div>
+        <div class="form-group"><label>Administered By</label><input type="text" name="administered_by" placeholder="Vet officer name"/></div>
+        <div class="form-group full"><label>Notes</label><textarea name="notes" placeholder="Additional notes..."></textarea></div>
+      </div>
+      <div style="margin-top:20px;display:flex;gap:12px;">
+        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save</button>
+        <a href="{{ url_for('vaccination') }}" class="btn btn-outline">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

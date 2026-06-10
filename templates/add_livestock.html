@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}Add Livestock{% endblock %}
+{% block page_title %}Add Livestock{% endblock %}
+{% block page_subtitle %}Register a new animal into the system{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div><h2>Register New Animal</h2><p>Fill in the details below to add a livestock record</p></div>
+  <a href="{{ url_for('livestock') }}" class="btn btn-outline"><i class="fas fa-arrow-left"></i> Back</a>
+</div>
+<div class="card" style="max-width:800px;">
+  <div class="card-header"><h3><i class="fas fa-horse" style="color:var(--primary);margin-right:8px"></i>Animal Information</h3></div>
+  <div class="card-body">
+    <form method="POST">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Tag Number *</label>
+          <input type="text" name="tag_number" placeholder="e.g. AKY-2024-001" required/>
+        </div>
+        <div class="form-group">
+          <label>Animal Type *</label>
+          <select name="animal_type" required>
+            <option value="">-- Select Type --</option>
+            <option>Cattle</option><option>Goat</option><option>Sheep</option>
+            <option>Poultry</option><option>Pig</option><option>Rabbit</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Breed</label>
+          <input type="text" name="breed" placeholder="e.g. White Fulani, Friesland"/>
+        </div>
+        <div class="form-group">
+          <label>Gender *</label>
+          <select name="gender" required>
+            <option value="">-- Select --</option>
+            <option>Male</option><option>Female</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Age</label>
+          <input type="text" name="age" placeholder="e.g. 2 years, 6 months"/>
+        </div>
+        <div class="form-group">
+          <label>Weight (kg)</label>
+          <input type="number" name="weight" placeholder="e.g. 45.5" step="0.1"/>
+        </div>
+        <div class="form-group">
+          <label>Date Acquired</label>
+          <input type="date" name="date_acquired"/>
+        </div>
+        <div class="form-group">
+          <label>Health Status *</label>
+          <select name="status" required>
+            <option>Healthy</option><option>Sick</option><option>Pregnant</option>
+            <option>Under Treatment</option><option>Quarantined</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label>Notes / Additional Information</label>
+          <textarea name="notes" placeholder="Any additional details about this animal..."></textarea>
+        </div>
+      </div>
+      <div style="margin-top:20px;display:flex;gap:12px;">
+        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Record</button>
+        <a href="{{ url_for('livestock') }}" class="btn btn-outline">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

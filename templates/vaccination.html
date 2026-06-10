@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Vaccination Records{% endblock %}
+{% block page_title %}Vaccination Records{% endblock %}
+{% block page_subtitle %}Track animal vaccination schedules{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div><h2>Vaccination Records</h2><p>{{ records|length }} vaccination record(s)</p></div>
+  <a href="{{ url_for('add_vaccination') }}" class="btn btn-primary"><i class="fas fa-plus"></i> Add Vaccination</a>
+</div>
+<div class="card">
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Tag No.</th><th>Animal Type</th><th>Vaccine</th><th>Date Given</th><th>Next Due</th><th>Administered By</th><th>Action</th></tr></thead>
+      <tbody>
+        {% for r in records %}
+        <tr>
+          <td><b style="color:var(--primary)">{{ r.tag_number }}</b></td>
+          <td>{{ r.animal_type }}</td>
+          <td><b>{{ r.vaccine_name }}</b></td>
+          <td style="font-size:12px;color:var(--text-light)">{{ r.date_administered }}</td>
+          <td><span class="badge badge-orange">{{ r.next_due_date }}</span></td>
+          <td>{{ r.administered_by }}</td>
+          <td><a href="{{ url_for('delete_vaccination', id=r.id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Delete?')"><i class="fas fa-trash"></i></a></td>
+        </tr>
+        {% else %}
+        <tr><td colspan="7"><div class="empty-state"><i class="fas fa-syringe"></i><p>No vaccination records yet.</p></div></td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

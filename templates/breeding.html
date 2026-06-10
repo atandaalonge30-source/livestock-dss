@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Breeding Records{% endblock %}
+{% block page_title %}Breeding Records{% endblock %}
+{% block page_subtitle %}Track reproduction and breeding activities{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div><h2>Breeding Records</h2><p>{{ records|length }} breeding record(s)</p></div>
+  <a href="{{ url_for('add_breeding') }}" class="btn btn-primary"><i class="fas fa-plus"></i> Add Breeding Record</a>
+</div>
+<div class="card">
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Female Tag</th><th>Male Tag</th><th>Type</th><th>Breeding Date</th><th>Expected Delivery</th><th>Offspring</th><th>Status</th><th>Action</th></tr></thead>
+      <tbody>
+        {% for r in records %}
+        <tr>
+          <td><b style="color:var(--primary)">{{ r.female_tag }}</b></td>
+          <td>{{ r.male_tag }}</td>
+          <td>{{ r.animal_type }}</td>
+          <td style="font-size:12px;color:var(--text-light)">{{ r.breeding_date }}</td>
+          <td style="font-size:12px;color:var(--text-light)">{{ r.expected_delivery }}</td>
+          <td>{{ r.offspring_count }}</td>
+          <td><span class="badge {% if r.status == 'Delivered' %}badge-green{% elif r.status == 'Pending' %}badge-orange{% else %}badge-blue{% endif %}">{{ r.status }}</span></td>
+          <td><a href="{{ url_for('delete_breeding', id=r.id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Delete?')"><i class="fas fa-trash"></i></a></td>
+        </tr>
+        {% else %}
+        <tr><td colspan="8"><div class="empty-state"><i class="fas fa-venus-mars"></i><p>No breeding records yet.</p></div></td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

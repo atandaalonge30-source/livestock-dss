@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Add Production Record{% endblock %}
+{% block page_title %}Production Records{% endblock %}
+{% block page_subtitle %}Log farm output{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div><h2>Add Production Record</h2></div>
+  <a href="{{ url_for('production') }}" class="btn btn-outline"><i class="fas fa-arrow-left"></i> Back</a>
+</div>
+<div class="card" style="max-width:700px;">
+  <div class="card-header"><h3><i class="fas fa-chart-bar" style="color:var(--primary);margin-right:8px"></i>Production Details</h3></div>
+  <div class="card-body">
+    <form method="POST">
+      <div class="form-grid">
+        <div class="form-group"><label>Animal Type *</label>
+          <select name="animal_type" required><option value="">-- Select --</option>
+          <option>Cattle</option><option>Goat</option><option>Sheep</option>
+          <option>Poultry</option><option>Pig</option><option>Rabbit</option></select>
+        </div>
+        <div class="form-group"><label>Production Type *</label>
+          <select name="production_type" required><option value="">-- Select --</option>
+          <option>Milk</option><option>Eggs</option><option>Meat (Live Weight)</option>
+          <option>Wool</option><option>Offspring</option></select>
+        </div>
+        <div class="form-group"><label>Quantity *</label><input type="number" name="quantity" placeholder="e.g. 25" step="0.1" required/></div>
+        <div class="form-group"><label>Unit *</label>
+          <select name="unit" required><option>Litres</option><option>kg</option><option>Units (eggs)</option><option>Count</option></select>
+        </div>
+        <div class="form-group"><label>Production Date *</label><input type="date" name="production_date" required/></div>
+        <div class="form-group"><label>Recorded By</label><input type="text" name="recorded_by" placeholder="Staff name"/></div>
+        <div class="form-group full"><label>Notes</label><textarea name="notes" placeholder="Additional notes..."></textarea></div>
+      </div>
+      <div style="margin-top:20px;display:flex;gap:12px;">
+        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save</button>
+        <a href="{{ url_for('production') }}" class="btn btn-outline">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

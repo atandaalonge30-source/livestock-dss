@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}First Aid / DSS{% endblock %}
+{% block page_title %}First Aid Decision Support{% endblock %}
+{% block page_subtitle %}AI-powered livestock disease diagnosis and treatment guidance{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div><h2>🩺 First Aid Decision Support System</h2><p>Enter animal symptoms to receive instant diagnosis and treatment guidance</p></div>
+</div>
+
+<div class="grid-2">
+  <div>
+    <div class="card" style="margin-bottom:20px;">
+      <div class="card-header"><h3><i class="fas fa-search" style="color:var(--primary);margin-right:8px"></i>Symptom Checker</h3></div>
+      <div class="card-body">
+        <form method="POST">
+          <div class="form-group" style="margin-bottom:16px;">
+            <label>Describe the animal's symptoms *</label>
+            <textarea name="symptoms" rows="5" placeholder="e.g. fever, loss of appetite, weakness, coughing, diarrhea, skin lesions..." required style="font-size:14px;">{{ symptoms_input }}</textarea>
+            <p style="font-size:11.5px;color:var(--text-light);margin-top:6px;"><i class="fas fa-info-circle"></i> Separate multiple symptoms with commas for better accuracy</p>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;padding:12px;">
+            <i class="fas fa-stethoscope"></i> Get Diagnosis & Treatment Advice
+          </button>
+        </form>
+      </div>
+    </div>
+
+    {% if result %}
+    <div class="dss-result">
+      <div class="dss-result-header" style="background:{% if result.severity == 'Critical' %}#dc2626{% elif result.severity == 'High' %}#ea580c{% elif result.severity == 'Medium' %}#ca8a04{% else %}#16a34a{% endif %};">
+        <i class="fas {% if result.severity == 'Critical' %}fa-radiation{% elif result.severity == 'High' %}fa-exclamation-triangle{% else %}fa-info-circle{% endif %}" style="margin-right:10px;"></i>
+        DSS Result — Severity: <span style="text-transform:uppercase;letter-spacing:1px;">{{ result.severity }}</span>
+      </div>
+      <div class="dss-result-body">
+        <div class="dss-field">
+          <label>Symptoms Entered</label>
+          <p style="color:var(--primary);font-weight:600;">{{ symptoms_input }}</p>
+        </div>
+        <div class="dss-field">
+          <label>Probable Diagnosis</label>
+          <p><b>{{ result.diagnosis }}</b></p>
+        </div>
+        <div class="dss-field">
+          <label>Recommended Action / Treatment</label>
+          <div style="font-size:14px;color:var(--text-dark);margin-top:4px;line-height:1.8;">
+            {% for line in result.treatment.split('\n') %}
+              {% if line.strip() %}
+                <div style="margin-bottom:4px;">{{ line }}</div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+        <div style="margin-top:16px;padding:12px 16px;background:#fef3c7;border-radius:8px;font-size:12.5px;color:#92400e;border-left:4px solid #f59e0b;">
+          <i class="fas fa-exclamation-circle"></i> <b>Disclaimer:</b> This is a first aid guide only. Always consult a qualified veterinary officer for proper diagnosis and professional treatment.
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+
+  <div>
+    <div class="card">
+      <div class="card-header"><h3><i class="fas fa-book-medical" style="color:var(--accent);margin-right:8px"></i>Common Symptom Guide</h3></div>
+      <div class="card-body" style="padding:0;">
+        {% set guide = [
+          ('Fever, loss of appetite, weakness', 'High', 'Possible Infection'),
+          ('Diarrhea, dehydration, weakness', 'Medium', 'Possible Enteritis'),
+          ('Coughing, nasal discharge', 'High', 'Possible Pneumonia'),
+          ('Skin lesions, blisters, lameness', 'Critical', 'Possible FMD'),
+          ('Sudden death, bloating', 'Critical', 'Possible Anthrax'),
+          ('Reduced egg production, lethargy', 'High', 'Possible Newcastle Disease'),
+          ('Weight loss, pale gums', 'Medium', 'Possible Worm Infestation'),
+          ('Swollen joints, limping', 'Medium', 'Possible Arthritis'),
+          ('Tick infestation, hair loss', 'Low', 'Possible Mange'),
+          ('Swollen udder, milk reduction', 'High', 'Possible Mastitis'),
+        ] %}
+        {% for symptoms, sev, condition in guide %}
+        <div style="padding:12px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;font-size:13px;">
+          <span class="badge {% if sev == 'Critical' %}badge-red{% elif sev == 'High' %}badge-orange{% elif sev == 'Medium' %}badge-blue{% else %}badge-green{% endif %}" style="min-width:60px;text-align:center;">{{ sev }}</span>
+          <div>
+            <div style="font-weight:600;color:var(--text-dark);">{{ condition }}</div>
+            <div style="color:var(--text-light);font-size:12px;">{{ symptoms }}</div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

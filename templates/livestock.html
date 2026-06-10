@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Livestock Records{% endblock %}
+{% block page_title %}Livestock Records{% endblock %}
+{% block page_subtitle %}All registered animals in the system{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div>
+    <h2>Livestock Registry</h2>
+    <p>{{ animals|length }} animal(s) registered in the system</p>
+  </div>
+  <a href="{{ url_for('add_livestock') }}" class="btn btn-primary"><i class="fas fa-plus"></i> Add Livestock</a>
+</div>
+<div class="card">
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Tag No.</th><th>Type</th><th>Breed</th><th>Gender</th><th>Age</th><th>Weight (kg)</th><th>Status</th><th>Date Acquired</th><th>Action</th></tr></thead>
+      <tbody>
+        {% for a in animals %}
+        <tr>
+          <td><b style="color:var(--primary)">{{ a.tag_number }}</b></td>
+          <td>{{ a.animal_type }}</td>
+          <td>{{ a.breed or '—' }}</td>
+          <td>{{ a.gender }}</td>
+          <td>{{ a.age }}</td>
+          <td>{{ a.weight }}</td>
+          <td><span class="badge {% if a.status == 'Healthy' %}badge-green{% elif a.status == 'Sick' %}badge-red{% elif a.status == 'Pregnant' %}badge-purple{% else %}badge-orange{% endif %}">{{ a.status }}</span></td>
+          <td style="font-size:12px;color:var(--text-light)">{{ a.date_acquired }}</td>
+          <td><a href="{{ url_for('delete_livestock', id=a.id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Delete this record?')"><i class="fas fa-trash"></i></a></td>
+        </tr>
+        {% else %}
+        <tr><td colspan="9"><div class="empty-state"><i class="fas fa-horse"></i><p>No livestock records yet. Click "Add Livestock" to get started.</p></div></td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

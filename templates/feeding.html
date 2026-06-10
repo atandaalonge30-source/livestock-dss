@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Feeding Records{% endblock %}
+{% block page_title %}Feeding Records{% endblock %}
+{% block page_subtitle %}Track animal feeding activities{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div><h2>Feeding Records</h2><p>{{ records|length }} feeding record(s)</p></div>
+  <a href="{{ url_for('add_feeding') }}" class="btn btn-primary"><i class="fas fa-plus"></i> Add Feeding Record</a>
+</div>
+<div class="card">
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Animal Type</th><th>Feed Type</th><th>Quantity (kg)</th><th>Feeding Date</th><th>Recorded By</th><th>Notes</th><th>Action</th></tr></thead>
+      <tbody>
+        {% for r in records %}
+        <tr>
+          <td>{{ r.animal_type }}</td>
+          <td><b>{{ r.feed_type }}</b></td>
+          <td>{{ r.quantity_kg }}</td>
+          <td style="font-size:12px;color:var(--text-light)">{{ r.feeding_date }}</td>
+          <td>{{ r.recorded_by }}</td>
+          <td style="max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ r.notes or '—' }}</td>
+          <td><a href="{{ url_for('delete_feeding', id=r.id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Delete?')"><i class="fas fa-trash"></i></a></td>
+        </tr>
+        {% else %}
+        <tr><td colspan="7"><div class="empty-state"><i class="fas fa-seedling"></i><p>No feeding records yet.</p></div></td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Production Records{% endblock %}
+{% block page_title %}Production Records{% endblock %}
+{% block page_subtitle %}Track farm output and productivity{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div><h2>Production Records</h2><p>{{ records|length }} production record(s)</p></div>
+  <a href="{{ url_for('add_production') }}" class="btn btn-primary"><i class="fas fa-plus"></i> Add Record</a>
+</div>
+<div class="card">
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Animal Type</th><th>Production Type</th><th>Quantity</th><th>Unit</th><th>Date</th><th>Recorded By</th><th>Action</th></tr></thead>
+      <tbody>
+        {% for r in records %}
+        <tr>
+          <td>{{ r.animal_type }}</td>
+          <td><b>{{ r.production_type }}</b></td>
+          <td>{{ r.quantity }}</td>
+          <td><span class="badge badge-blue">{{ r.unit }}</span></td>
+          <td style="font-size:12px;color:var(--text-light)">{{ r.production_date }}</td>
+          <td>{{ r.recorded_by }}</td>
+          <td><a href="{{ url_for('delete_production', id=r.id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Delete?')"><i class="fas fa-trash"></i></a></td>
+        </tr>
+        {% else %}
+        <tr><td colspan="7"><div class="empty-state"><i class="fas fa-chart-bar"></i><p>No production records yet.</p></div></td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

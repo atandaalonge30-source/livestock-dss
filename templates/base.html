@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}Livestock DSS{% endblock %} | Akinyele LGA</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+  <style>
+    :root {
+      --primary: #1a6b3c;
+      --primary-light: #2d9e5f;
+      --primary-dark: #104d2b;
+      --accent: #f5a623;
+      --accent-dark: #d4891a;
+      --bg: #f0f4f1;
+      --sidebar-bg: #0f3d22;
+      --sidebar-text: #c8e6c9;
+      --sidebar-hover: #1a6b3c;
+      --card-bg: #ffffff;
+      --text-dark: #1a2e1e;
+      --text-mid: #4a6852;
+      --text-light: #8fa896;
+      --border: #d4e6d9;
+      --danger: #e53935;
+      --warning: #f59e0b;
+      --success: #16a34a;
+      --info: #0284c7;
+      --shadow: 0 2px 16px rgba(26,107,60,0.10);
+      --shadow-lg: 0 8px 32px rgba(26,107,60,0.15);
+      --radius: 12px;
+      --sidebar-width: 260px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text-dark); display: flex; min-height: 100vh; }
+
+    /* SIDEBAR */
+    .sidebar {
+      width: var(--sidebar-width); background: var(--sidebar-bg); color: var(--sidebar-text);
+      display: flex; flex-direction: column; position: fixed; height: 100vh; z-index: 100;
+      box-shadow: 4px 0 20px rgba(0,0,0,0.3); transition: all 0.3s;
+    }
+    .sidebar-logo {
+      padding: 24px 20px; border-bottom: 1px solid rgba(255,255,255,0.08);
+      display: flex; align-items: center; gap: 12px;
+    }
+    .sidebar-logo .logo-icon {
+      width: 44px; height: 44px; background: var(--accent); border-radius: 10px;
+      display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;
+    }
+    .sidebar-logo .logo-text h2 { font-size: 14px; font-weight: 700; color: #fff; line-height: 1.2; }
+    .sidebar-logo .logo-text span { font-size: 11px; color: var(--sidebar-text); opacity: 0.7; }
+    .sidebar-nav { flex: 1; padding: 16px 0; overflow-y: auto; }
+    .nav-section-title {
+      font-size: 10px; font-weight: 600; letter-spacing: 1.2px; color: rgba(200,230,201,0.45);
+      padding: 12px 20px 6px; text-transform: uppercase;
+    }
+    .nav-item { display: block; padding: 11px 20px; color: var(--sidebar-text); text-decoration: none;
+      display: flex; align-items: center; gap: 12px; font-size: 13.5px; font-weight: 500;
+      border-radius: 0; transition: all 0.2s; position: relative; margin: 1px 8px; border-radius: 8px;
+    }
+    .nav-item i { width: 20px; text-align: center; font-size: 15px; opacity: 0.85; }
+    .nav-item:hover, .nav-item.active {
+      background: var(--sidebar-hover); color: #fff;
+    }
+    .nav-item.active { background: var(--primary-light); color: #fff; }
+    .nav-item.active i { opacity: 1; }
+    .nav-item .badge {
+      margin-left: auto; background: var(--accent); color: #fff; font-size: 10px;
+      font-weight: 700; padding: 2px 7px; border-radius: 20px;
+    }
+    .sidebar-footer {
+      padding: 16px; border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    .sidebar-footer a {
+      display: flex; align-items: center; gap: 10px; color: var(--sidebar-text);
+      text-decoration: none; font-size: 13px; padding: 10px 12px; border-radius: 8px;
+      transition: all 0.2s;
+    }
+    .sidebar-footer a:hover { background: rgba(255,255,255,0.08); color: #fff; }
+
+    /* MAIN */
+    .main { margin-left: var(--sidebar-width); flex: 1; display: flex; flex-direction: column; }
+    .topbar {
+      background: var(--card-bg); padding: 0 28px; height: 64px; display: flex;
+      align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; z-index: 50; box-shadow: var(--shadow);
+    }
+    .topbar-left h1 { font-size: 18px; font-weight: 700; color: var(--text-dark); }
+    .topbar-left p { font-size: 12px; color: var(--text-light); margin-top: 1px; }
+    .topbar-right { display: flex; align-items: center; gap: 16px; }
+    .topbar-right .date-badge {
+      background: var(--bg); border: 1px solid var(--border); padding: 6px 14px;
+      border-radius: 20px; font-size: 12px; color: var(--text-mid); font-weight: 500;
+    }
+    .topbar-right .admin-badge {
+      display: flex; align-items: center; gap: 8px; background: var(--primary);
+      color: #fff; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600;
+    }
+    .content { padding: 28px; flex: 1; }
+
+    /* FLASH */
+    .flash-container { padding: 0 28px; margin-top: 16px; }
+    .flash { padding: 12px 18px; border-radius: var(--radius); font-size: 13.5px;
+      font-weight: 500; display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .flash.success { background: #d1fae5; color: #065f46; border-left: 4px solid var(--success); }
+    .flash.error { background: #fee2e2; color: #991b1b; border-left: 4px solid var(--danger); }
+
+    /* CARDS */
+    .card { background: var(--card-bg); border-radius: var(--radius); box-shadow: var(--shadow);
+      border: 1px solid var(--border); }
+    .card-header { padding: 18px 22px; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between; }
+    .card-header h3 { font-size: 15px; font-weight: 700; color: var(--text-dark); }
+    .card-body { padding: 22px; }
+
+    /* STATS */
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-bottom: 24px; }
+    .stat-card {
+      background: var(--card-bg); border-radius: var(--radius); padding: 20px 22px;
+      border: 1px solid var(--border); box-shadow: var(--shadow);
+      display: flex; align-items: center; gap: 16px; transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .stat-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+    .stat-icon {
+      width: 52px; height: 52px; border-radius: 12px; display: flex;
+      align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0;
+    }
+    .stat-icon.green { background: #d1fae5; color: #065f46; }
+    .stat-icon.blue { background: #dbeafe; color: #1d4ed8; }
+    .stat-icon.orange { background: #fef3c7; color: #92400e; }
+    .stat-icon.red { background: #fee2e2; color: #991b1b; }
+    .stat-icon.purple { background: #ede9fe; color: #5b21b6; }
+    .stat-icon.teal { background: #ccfbf1; color: #115e59; }
+    .stat-icon.pink { background: #fce7f3; color: #9d174d; }
+    .stat-info .value { font-size: 26px; font-weight: 800; color: var(--text-dark); line-height: 1; }
+    .stat-info .label { font-size: 12px; color: var(--text-light); margin-top: 4px; font-weight: 500; }
+
+    /* TABLE */
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+    thead th { background: var(--bg); padding: 12px 16px; text-align: left; font-weight: 600;
+      font-size: 12px; color: var(--text-mid); border-bottom: 2px solid var(--border);
+      text-transform: uppercase; letter-spacing: 0.5px; }
+    tbody tr { border-bottom: 1px solid var(--border); transition: background 0.15s; }
+    tbody tr:hover { background: #f7faf8; }
+    tbody td { padding: 12px 16px; color: var(--text-dark); vertical-align: middle; }
+    tbody tr:last-child { border-bottom: none; }
+
+    /* BADGE */
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+    .badge-green { background: #d1fae5; color: #065f46; }
+    .badge-red { background: #fee2e2; color: #991b1b; }
+    .badge-orange { background: #fef3c7; color: #92400e; }
+    .badge-blue { background: #dbeafe; color: #1d4ed8; }
+    .badge-gray { background: #f3f4f6; color: #374151; }
+    .badge-purple { background: #ede9fe; color: #5b21b6; }
+
+    /* BUTTONS */
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 9px 18px;
+      border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer;
+      text-decoration: none; border: none; transition: all 0.2s; }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: var(--primary-light); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(26,107,60,0.3); }
+    .btn-accent { background: var(--accent); color: #fff; }
+    .btn-accent:hover { background: var(--accent-dark); }
+    .btn-danger { background: var(--danger); color: #fff; }
+    .btn-danger:hover { background: #c62828; }
+    .btn-outline { background: transparent; border: 1.5px solid var(--primary); color: var(--primary); }
+    .btn-outline:hover { background: var(--primary); color: #fff; }
+    .btn-sm { padding: 5px 12px; font-size: 12px; }
+
+    /* FORMS */
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .form-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group.full { grid-column: 1 / -1; }
+    label { font-size: 12.5px; font-weight: 600; color: var(--text-mid); }
+    input, select, textarea {
+      padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 8px;
+      font-size: 13.5px; font-family: 'Inter', sans-serif; color: var(--text-dark);
+      background: #fff; transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--primary); box-shadow: 0 0 0 3px rgba(26,107,60,0.1);
+    }
+    textarea { resize: vertical; min-height: 80px; }
+
+    /* SEVERITY */
+    .sev-Critical { color: #dc2626; font-weight: 700; }
+    .sev-High { color: #ea580c; font-weight: 700; }
+    .sev-Medium { color: #ca8a04; font-weight: 600; }
+    .sev-Low { color: #16a34a; font-weight: 600; }
+    .sev-Unknown { color: #6b7280; font-weight: 600; }
+
+    /* PAGE HEADER */
+    .page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 22px; }
+    .page-header h2 { font-size: 20px; font-weight: 800; color: var(--text-dark); }
+    .page-header p { font-size: 13px; color: var(--text-light); margin-top: 2px; }
+
+    /* GRID 2 */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+
+    /* DSS RESULT */
+    .dss-result { border-radius: var(--radius); overflow: hidden; margin-top: 20px; }
+    .dss-result-header { padding: 16px 22px; font-weight: 700; font-size: 15px; color: #fff; }
+    .dss-result-body { padding: 20px 22px; background: #fff; border: 1px solid var(--border); border-top: none; border-radius: 0 0 var(--radius) var(--radius); }
+    .dss-field { margin-bottom: 14px; }
+    .dss-field label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-light); font-weight: 600; }
+    .dss-field p { font-size: 14px; color: var(--text-dark); margin-top: 4px; line-height: 1.6; }
+
+    /* EMPTY STATE */
+    .empty-state { text-align: center; padding: 60px 20px; color: var(--text-light); }
+    .empty-state i { font-size: 48px; margin-bottom: 12px; opacity: 0.4; }
+    .empty-state p { font-size: 14px; }
+  </style>
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">🐄</div>
+    <div class="logo-text">
+      <h2>Livestock DSS</h2>
+      <span>Akinyele LGA, Oyo State</span>
+    </div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-title">Main</div>
+    <a href="{{ url_for('dashboard') }}" class="nav-item {% if request.endpoint == 'dashboard' %}active{% endif %}">
+      <i class="fas fa-th-large"></i> Dashboard
+    </a>
+    <div class="nav-section-title">Management</div>
+    <a href="{{ url_for('livestock') }}" class="nav-item {% if 'livestock' in request.endpoint %}active{% endif %}">
+      <i class="fas fa-horse"></i> Livestock Records
+    </a>
+    <a href="{{ url_for('health') }}" class="nav-item {% if 'health' in request.endpoint and 'first' not in request.endpoint %}active{% endif %}">
+      <i class="fas fa-heartbeat"></i> Health Records
+    </a>
+    <a href="{{ url_for('feeding') }}" class="nav-item {% if 'feeding' in request.endpoint %}active{% endif %}">
+      <i class="fas fa-seedling"></i> Feeding Records
+    </a>
+    <a href="{{ url_for('breeding') }}" class="nav-item {% if 'breeding' in request.endpoint %}active{% endif %}">
+      <i class="fas fa-venus-mars"></i> Breeding Records
+    </a>
+    <a href="{{ url_for('production') }}" class="nav-item {% if 'production' in request.endpoint %}active{% endif %}">
+      <i class="fas fa-chart-bar"></i> Production Records
+    </a>
+    <a href="{{ url_for('vaccination') }}" class="nav-item {% if 'vaccination' in request.endpoint %}active{% endif %}">
+      <i class="fas fa-syringe"></i> Vaccination Records
+    </a>
+    <div class="nav-section-title">Decision Support</div>
+    <a href="{{ url_for('firstaid') }}" class="nav-item {% if request.endpoint == 'firstaid' %}active{% endif %}">
+      <i class="fas fa-stethoscope"></i> First Aid / DSS
+      <span class="badge">AI</span>
+    </a>
+  </nav>
+  <div class="sidebar-footer">
+    <a href="{{ url_for('logout') }}">
+      <i class="fas fa-sign-out-alt"></i> Logout
+    </a>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <h1>{% block page_title %}Dashboard{% endblock %}</h1>
+      <p>{% block page_subtitle %}Livestock Decision Support System{% endblock %}</p>
+    </div>
+    <div class="topbar-right">
+      <span class="date-badge"><i class="fas fa-calendar-alt" style="margin-right:6px;color:var(--primary)"></i>
+        <span id="topDate"></span>
+      </span>
+      <span class="admin-badge"><i class="fas fa-user-shield"></i> {{ session.get('admin','Admin')|title }}</span>
+    </div>
+  </div>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="flash-container">
+      {% for cat, msg in messages %}
+      <div class="flash {{ cat }}">
+        <i class="fas {% if cat == 'success' %}fa-check-circle{% else %}fa-exclamation-circle{% endif %}"></i>
+        {{ msg }}
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  {% endwith %}
+
+  <div class="content">
+    {% block content %}{% endblock %}
+  </div>
+</div>
+
+<script>
+  const d = new Date();
+  document.getElementById('topDate').textContent = d.toLocaleDateString('en-NG',{weekday:'short',year:'numeric',month:'short',day:'numeric'});
+</script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

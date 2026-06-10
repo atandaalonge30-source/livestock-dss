@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Add Feeding Record{% endblock %}
+{% block page_title %}Feeding Records{% endblock %}
+{% block page_subtitle %}Log a feeding activity{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div><h2>Add Feeding Record</h2></div>
+  <a href="{{ url_for('feeding') }}" class="btn btn-outline"><i class="fas fa-arrow-left"></i> Back</a>
+</div>
+<div class="card" style="max-width:700px;">
+  <div class="card-header"><h3><i class="fas fa-seedling" style="color:var(--primary);margin-right:8px"></i>Feeding Details</h3></div>
+  <div class="card-body">
+    <form method="POST">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Animal Type *</label>
+          <select name="animal_type" required>
+            <option value="">-- Select --</option>
+            <option>Cattle</option><option>Goat</option><option>Sheep</option>
+            <option>Poultry</option><option>Pig</option><option>Rabbit</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Feed Type *</label>
+          <input type="text" name="feed_type" placeholder="e.g. Grass, Grains, Concentrate" required/>
+        </div>
+        <div class="form-group">
+          <label>Quantity (kg) *</label>
+          <input type="number" name="quantity_kg" placeholder="e.g. 10.5" step="0.1" required/>
+        </div>
+        <div class="form-group">
+          <label>Feeding Date *</label>
+          <input type="date" name="feeding_date" required/>
+        </div>
+        <div class="form-group">
+          <label>Recorded By</label>
+          <input type="text" name="recorded_by" placeholder="Staff name"/>
+        </div>
+        <div class="form-group full">
+          <label>Notes</label>
+          <textarea name="notes" placeholder="Additional notes..."></textarea>
+        </div>
+      </div>
+      <div style="margin-top:20px;display:flex;gap:12px;">
+        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save</button>
+        <a href="{{ url_for('feeding') }}" class="btn btn-outline">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

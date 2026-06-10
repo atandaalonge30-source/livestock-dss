@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+{% block page_subtitle %}Overview of all livestock activities{% endblock %}
+
+{% block extra_css %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<!-- STATS -->
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-icon green"><i class="fas fa-horse"></i></div>
+    <div class="stat-info"><div class="value">{{ total_livestock }}</div><div class="label">Total Livestock</div></div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon blue"><i class="fas fa-check-circle"></i></div>
+    <div class="stat-info"><div class="value">{{ healthy }}</div><div class="label">Healthy Animals</div></div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon red"><i class="fas fa-exclamation-triangle"></i></div>
+    <div class="stat-info"><div class="value">{{ sick }}</div><div class="label">Sick / At Risk</div></div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon orange"><i class="fas fa-heartbeat"></i></div>
+    <div class="stat-info"><div class="value">{{ total_health }}</div><div class="label">Health Records</div></div>
+  </div>
+</div>
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-icon purple"><i class="fas fa-venus-mars"></i></div>
+    <div class="stat-info"><div class="value">{{ total_breeding }}</div><div class="label">Breeding Records</div></div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon teal"><i class="fas fa-chart-bar"></i></div>
+    <div class="stat-info"><div class="value">{{ total_production }}</div><div class="label">Production Records</div></div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon pink"><i class="fas fa-syringe"></i></div>
+    <div class="stat-info"><div class="value">{{ total_vaccination }}</div><div class="label">Vaccinations</div></div>
+  </div>
+  <div class="stat-card" style="cursor:pointer" onclick="window.location='{{ url_for('firstaid') }}'">
+    <div class="stat-icon green"><i class="fas fa-stethoscope"></i></div>
+    <div class="stat-info"><div class="value" style="font-size:16px;font-weight:700;color:var(--primary)">DSS</div><div class="label">First Aid Support</div></div>
+  </div>
+</div>
+
+<!-- CHARTS + RECENT -->
+<div class="grid-2" style="margin-bottom:20px;">
+  <div class="card">
+    <div class="card-header"><h3><i class="fas fa-chart-pie" style="color:var(--primary);margin-right:8px"></i>Livestock by Type</h3></div>
+    <div class="card-body">
+      <canvas id="animalChart" height="220"></canvas>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><h3><i class="fas fa-chart-bar" style="color:var(--accent);margin-right:8px"></i>Population Overview</h3></div>
+    <div class="card-body">
+      <canvas id="barChart" height="220"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- RECENT TABLES -->
+<div class="grid-2">
+  <div class="card">
+    <div class="card-header">
+      <h3><i class="fas fa-horse" style="color:var(--primary);margin-right:8px"></i>Recent Livestock</h3>
+      <a href="{{ url_for('livestock') }}" class="btn btn-outline btn-sm">View All</a>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Tag</th><th>Type</th><th>Status</th><th>Date Added</th></tr></thead>
+        <tbody>
+          {% for a in recent_livestock %}
+          <tr>
+            <td><b>{{ a.tag_number }}</b></td>
+            <td>{{ a.animal_type }}</td>
+            <td>
+              <span class="badge {% if a.status == 'Healthy' %}badge-green{% elif a.status == 'Sick' %}badge-red{% else %}badge-orange{% endif %}">
+                {{ a.status }}
+              </span>
+            </td>
+            <td style="color:var(--text-light);font-size:12px;">{{ a.date_added.strftime('%d %b %Y') }}</td>
+          </tr>
+          {% else %}
+          <tr><td colspan="4" style="text-align:center;color:var(--text-light);padding:24px;">No records yet</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h3><i class="fas fa-heartbeat" style="color:var(--danger);margin-right:8px"></i>Recent Health Alerts</h3>
+      <a href="{{ url_for('health') }}" class="btn btn-outline btn-sm">View All</a>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Tag</th><th>Symptom</th><th>Status</th></tr></thead>
+        <tbody>
+          {% for r in recent_health %}
+          <tr>
+            <td><b>{{ r.tag_number }}</b></td>
+            <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ r.symptom }}</td>
+            <td>
+              <span class="badge {% if r.status == 'Recovered' %}badge-green{% elif r.status == 'Under Treatment' %}badge-orange{% else %}badge-red{% endif %}">
+                {{ r.status }}
+              </span>
+            </td>
+          </tr>
+          {% else %}
+          <tr><td colspan="3" style="text-align:center;color:var(--text-light);padding:24px;">No records yet</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const counts = {{ animal_counts | tojson }};
+const labels = Object.keys(counts);
+const data = Object.values(counts);
+const colors = ['#1a6b3c','#2d9e5f','#f5a623','#0284c7','#7c3aed','#e53935'];
+
+new Chart(document.getElementById('animalChart'), {
+  type: 'doughnut',
+  data: { labels, datasets: [{ data, backgroundColor: colors, borderWidth: 3, borderColor: '#fff' }] },
+  options: { plugins: { legend: { position: 'bottom', labels: { font: { size: 12 } } } }, cutout: '65%' }
+});
+
+new Chart(document.getElementById('barChart'), {
+  type: 'bar',
+  data: { labels, datasets: [{ label: 'Count', data, backgroundColor: colors, borderRadius: 8 }] },
+  options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+});
+</script>
+{% endblock %}

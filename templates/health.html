@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Health Records{% endblock %}
+{% block page_title %}Health Records{% endblock %}
+{% block page_subtitle %}Animal disease and treatment records{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div><h2>Health Records</h2><p>{{ records|length }} health record(s) in the system</p></div>
+  <a href="{{ url_for('add_health') }}" class="btn btn-primary"><i class="fas fa-plus"></i> Add Health Record</a>
+</div>
+<div class="card">
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Tag No.</th><th>Type</th><th>Symptom</th><th>Diagnosis</th><th>Treatment</th><th>Vet Officer</th><th>Status</th><th>Date</th><th>Action</th></tr></thead>
+      <tbody>
+        {% for r in records %}
+        <tr>
+          <td><b style="color:var(--primary)">{{ r.tag_number }}</b></td>
+          <td>{{ r.animal_type }}</td>
+          <td style="max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="{{ r.symptom }}">{{ r.symptom }}</td>
+          <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="{{ r.diagnosis }}">{{ r.diagnosis }}</td>
+          <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="{{ r.treatment }}">{{ r.treatment }}</td>
+          <td>{{ r.veterinary_officer }}</td>
+          <td><span class="badge {% if r.status == 'Recovered' %}badge-green{% elif r.status == 'Under Treatment' %}badge-orange{% else %}badge-red{% endif %}">{{ r.status }}</span></td>
+          <td style="font-size:12px;color:var(--text-light)">{{ r.date_recorded.strftime('%d %b %Y') }}</td>
+          <td><a href="{{ url_for('delete_health', id=r.id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Delete?')"><i class="fas fa-trash"></i></a></td>
+        </tr>
+        {% else %}
+        <tr><td colspan="9"><div class="empty-state"><i class="fas fa-heartbeat"></i><p>No health records yet.</p></div></td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
